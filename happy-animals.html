@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌸 La Ferme Flashy ! 🌸</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #ff1f8a;
+    background: linear-gradient(135deg, #ff1f8a 0%, #ff6bda 30%, #a855f7 60%, #06d6e0 100%);
+    min-height: 100vh;
+    font-family: 'Fredoka One', cursive;
+    overflow-x: hidden;
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Ctext y='20' font-size='20'%3E🌸%3C/text%3E%3C/svg%3E") 12 12, auto;
+  }
+
+  /* HEADER */
+  .header {
+    text-align: center;
+    padding: 2.5rem 1rem 1rem;
+    position: relative;
+    z-index: 10;
+  }
+
+  .title {
+    font-size: clamp(2.5rem, 8vw, 5.5rem);
+    color: #fff;
+    text-shadow: 5px 5px 0 #ff006e, 8px 8px 0 #a855f7, 11px 11px 0 rgba(0,0,0,0.15);
+    letter-spacing: 2px;
+    animation: titleWiggle 2.5s ease-in-out infinite;
+    display: inline-block;
+  }
+  .subtitle {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900;
+    font-size: clamp(1rem, 3vw, 1.5rem);
+    color: #ffe0f7;
+    margin-top: .5rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+
+  @keyframes titleWiggle {
+    0%,100% { transform: rotate(-2deg) scale(1); }
+    50% { transform: rotate(2deg) scale(1.04); }
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; }
+    50% { opacity: .6; }
+  }
+
+  /* CONFETTI FLOATERS */
+  .floaters { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+  .floater {
+    position: absolute;
+    font-size: 1.6rem;
+    animation: floatUp linear infinite;
+    opacity: .85;
+  }
+  @keyframes floatUp {
+    0%   { transform: translateY(110vh) rotate(0deg); opacity:.8; }
+    100% { transform: translateY(-10vh)  rotate(360deg); opacity:0; }
+  }
+
+  /* GRID */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+    gap: 1.8rem;
+    padding: 2rem clamp(1rem, 5vw, 4rem) 4rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 5;
+  }
+
+  /* ANIMAL CARD */
+  .card {
+    background: white;
+    border-radius: 2rem;
+    padding: 1.8rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .8rem;
+    box-shadow: 0 8px 0 rgba(0,0,0,.15), 0 16px 32px rgba(0,0,0,.1);
+    transition: transform .15s ease, box-shadow .15s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    border: 4px solid transparent;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    opacity: .12;
+    transition: opacity .3s;
+  }
+  .card:hover {
+    transform: translateY(-10px) rotate(var(--tilt, 2deg)) scale(1.04);
+    box-shadow: 0 18px 0 rgba(0,0,0,.1), 0 28px 48px rgba(0,0,0,.15);
+  }
+  .card:hover::before { opacity: .22; }
+  .card:active { transform: scale(.97); }
+
+  /* SVG ANIMAL container */
+  .animal-wrap {
+    width: 160px;
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    animation: var(--anim, bounce) 2s ease-in-out infinite;
+    position: relative;
+  }
+  .animal-wrap svg { width: 100%; height: 100%; }
+
+  /* Shared animations */
+  @keyframes bounce {
+    0%,100% { transform: translateY(0); }
+    50%      { transform: translateY(-14px); }
+  }
+  @keyframes spin {
+    0%   { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  @keyframes shake {
+    0%,100% { transform: rotate(-8deg); }
+    50%     { transform: rotate(8deg); }
+  }
+  @keyframes heartbeat {
+    0%,100% { transform: scale(1); }
+    30%     { transform: scale(1.18); }
+    60%     { transform: scale(.95); }
+  }
+  @keyframes floatSide {
+    0%,100% { transform: translateX(0) rotate(-3deg); }
+    50%     { transform: translateX(12px) rotate(3deg); }
+  }
+  @keyframes zoom {
+    0%,100% { transform: scale(1); }
+    50%     { transform: scale(1.15); }
+  }
+
+  .animal-name {
+    font-size: 1.5rem;
+    color: #2d2d2d;
+    text-align: center;
+    letter-spacing: 1px;
+  }
+  .animal-desc {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: .9rem;
+    color: #888;
+    text-align: center;
+    line-height: 1.4;
+  }
+  .fun-fact {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900;
+    font-size: .85rem;
+    padding: .5rem 1rem;
+    border-radius: 1rem;
+    text-align: center;
+    width: 100%;
+    margin-top: .2rem;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    font-size: 1.3rem;
+    color: #ffe8f7;
+    text-shadow: 2px 2px 4px rgba(0,0,0,.2);
+    position: relative;
+    z-index: 5;
+  }
+</style>
+</head>
+<body>
+
+<!-- FLOATING EMOJIS -->
+<div class="floaters" id="floaters"></div>
+
+<header class="header">
+  <div class="title">🌸 La Ferme Flashy 🌸</div>
+  <div class="subtitle">✨ Les animaux les plus goofy du monde ✨</div>
+</header>
+
+<main class="grid" id="grid"></main>
+
+<footer>Fait avec 💖 et beaucoup trop de rose</footer>
+
+<script>
+const animals = [
+  {
+    name: "Flamant Rose",
+    desc: "Elle se tient sur une patte parce que c'est plus stylé",
+    fact: "🦩 100% vibes, 0% équilibre",
+    color: "#ff6bda",
+    bg: "#fff0fb",
+    border: "#ffb3ec",
+    tilt: "-2deg",
+    anim: "floatSide",
+    svg: `<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+      <!-- Body -->
+      <ellipse cx="80" cy="90" rx="32" ry="36" fill="#ff85d4"/>
+      <!-- Neck long -->
+      <path d="M80 60 Q60 40 65 15" stroke="#ff5ec4" stroke-width="14" fill="none" stroke-linecap="round"/>
+      <!-- Head -->
+      <circle cx="63" cy="11" r="13" fill="#ff5ec4"/>
+      <!-- Beak curved -->
+      <path d="M68 14 Q82 10 80 18 Q76 24 68 18 Z" fill="#f7b731"/>
+      <!-- Eye -->
+      <circle cx="59" cy="8" r="3" fill="#2d2d2d"/>
+      <circle cx="58" cy="7" r="1" fill="white"/>
+      <!-- Wing -->
+      <ellipse cx="95" cy="88" rx="18" ry="10" fill="#ff99df" transform="rotate(-20 95 88)"/>
+      <!-- Legs -->
+      <line x1="75" y1="124" x2="72" y2="150" stroke="#f7b731" stroke-width="5" stroke-linecap="round"/>
+      <line x1="75" y1="150" x2="68" y2="153" stroke="#f7b731" stroke-width="4" stroke-linecap="round"/>
+      <line x1="75" y1="150" x2="75" y2="155" stroke="#f7b731" stroke-width="4" stroke-linecap="round"/>
+      <!-- Cheeks -->
+      <circle cx="56" cy="14" r="5" fill="#ff3399" opacity=".5"/>
+      <!-- Stars -->
+      <text x="110" y="40" font-size="16">✨</text>
+      <text x="20" y="60" font-size="12">💖</text>
+    </svg>`
+  },
+  {
+    name: "Lapin Disco",
+    desc: "Il danse même en dormant. Surtout en dormant.",
+    fact: "🐰 Ses oreilles captent les radios FM",
+    color: "#a855f7",
+    bg: "#faf0ff",
+    border: "#d8b4fe",
+    tilt: "3deg",
+    anim: "bounce",
+    svg: `<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+      <!-- Ears -->
+      <ellipse cx="58" cy="30" rx="10" ry="28" fill="#e879f9" transform="rotate(-10 58 30)"/>
+      <ellipse cx="102" cy="30" rx="10" ry="28" fill="#e879f9" transform="rotate(10 102 30)"/>
+      <ellipse cx="58" cy="30" rx="5" ry="22" fill="#fda4af" transform="rotate(-10 58 30)"/>
+      <ellipse cx="102" cy="30" rx="5" ry="22" fill="#fda4af" transform="rotate(10 102 30)"/>
+      <!-- Body -->
+      <ellipse cx="80" cy="108" rx="38" ry="42" fill="#f0abfc"/>
+      <!-- Tummy -->
+      <ellipse cx="80" cy="112" rx="20" ry="24" fill="#fce7f3"/>
+      <!-- Head -->
+      <circle cx="80" cy="68" r="34" fill="#f0abfc"/>
+      <!-- Eyes big -->
+      <ellipse cx="68" cy="62" rx="9" ry="10" fill="white"/>
+      <ellipse cx="92" cy="62" rx="9" ry="10" fill="white"/>
+      <circle cx="68" cy="64" r="5" fill="#7c3aed"/>
+      <circle cx="92" cy="64" r="5" fill="#7c3aed"/>
+      <circle cx="70" cy="62" r="2" fill="white"/>
+      <circle cx="94" cy="62" r="2" fill="white"/>
+      <!-- Nose -->
+      <ellipse cx="80" cy="76" rx="4" ry="3" fill="#f472b6"/>
+      <!-- Mouth smile -->
+      <path d="M74 80 Q80 86 86 80" stroke="#d946ef" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <!-- Cheeks -->
+      <circle cx="58" cy="74" r="8" fill="#f472b6" opacity=".45"/>
+      <circle cx="102" cy="74" r="8" fill="#f472b6" opacity=".45"/>
+      <!-- Paws -->
+      <ellipse cx="52" cy="130" rx="15" ry="10" fill="#e879f9" transform="rotate(-30 52 130)"/>
+      <ellipse cx="108" cy="130" rx="15" ry="10" fill="#e879f9" transform="rotate(30 108 130)"/>
+      <!-- Disco sparkles -->
+      <text x="5" y="50" font-size="14">🪩</text>
+      <text x="130" y="50" font-size="14">⭐</text>
+      <text x="115" y="100" font-size="12">✨</text>
+    </svg>`
+  },
+  {
+    name: "Axolotl Superstar",
+    desc: "Il repousse ses membres ET les critiques",
+    fact: "🦎 Le seul bébé qui reste bébé à vie",
+    color: "#06d6e0",
+    bg: "#f0fffe",
+    border: "#a5f3fc",
+    tilt: "-3deg",
+    anim: "floatSide",
+    svg: `<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+      <!-- Gills -->
+      <ellipse cx="35" cy="70" rx="7" ry="22" fill="#fb7185" transform="rotate(-20 35 70)"/>
+      <ellipse cx="42" cy="55" rx="7" ry="22" fill="#f472b6" transform="rotate(-5 42 55)"/>
+      <ellipse cx="125" cy="70" rx="7" ry="22" fill="#fb7185" transform="rotate(20 125 70)"/>
+      <ellipse cx="118" cy="55" rx="7" ry="22" fill="#f472b6" transform="rotate(5 118 55)"/>
+      <!-- Body -->
+      <ellipse cx="80" cy="100" rx="44" ry="38" fill="#f9a8d4"/>
+      <!-- Tail -->
+      <path d="M118 112 Q148 130 142 155 Q125 145 118 130 Z" fill="#f0abfc"/>
+      <!-- Head -->
+      <ellipse cx="80" cy="68" rx="40" ry="36" fill="#fce7f3"/>
+      <!-- Eyes huge cute -->
+      <circle cx="64" cy="62" r="12" fill="white"/>
+      <circle cx="96" cy="62" r="12" fill="white"/>
+      <circle cx="66" cy="64" r="7" fill="#22d3ee"/>
+      <circle cx="98" cy="64" r="7" fill="#22d3ee"/>
+      <circle cx="64" cy="62" r="3" fill="#0e7490"/>
+      <circle cx="96" cy="62" r="3" fill="#0e7490"/>
+      <circle cx="67" cy="60" r="2" fill="white"/>
+      <circle cx="99" cy="60" r="2" fill="white"/>
+      <!-- Smile big -->
+      <path d="M64 80 Q80 95 96 80" stroke="#e879f9" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <!-- Cheeks -->
+      <circle cx="50" cy="76" r="8" fill="#f472b6" opacity=".4"/>
+      <circle cx="110" cy="76" r="8" fill="#f472b6" opacity=".4"/>
+      <!-- Tiny legs -->
+      <ellipse cx="55" cy="130" rx="10" ry="6" fill="#f9a8d4" transform="rotate(-15 55 130)"/>
+      <ellipse cx="105" cy="130" rx="10" ry="6" fill="#f9a8d4" transform="rotate(15 105 130)"/>
+      <!-- Stars -->
+      <text x="10" y="110" font-size="12">💦</text>
+      <text x="132" y="40" font-size="14">✨</text>
+    </svg>`
+  },
+  {
+    name: "Licorne Banane",
+    desc: "Elle sent le chewing-gum et les rêves",
+    fact: "🦄 Sa corne capte la 5G du bonheur",
+    color: "#ff9f43",
+    bg: "#fffbf0",
+    border: "#ffd39b",
+    tilt: "2deg",
+    anim: "bounce",
+    svg: `<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+      <!-- Rainbow mane -->
+      <ellipse cx="92" cy="45" rx="18" ry="30" fill="#ff6b9d" transform="rotate(15 92 45)"/>
+      <ellipse cx="100" cy="40" rx="14" ry="26" fill="#ff9f43" transform="rotate(20 100 40)"/>
+      <ellipse cx="106" cy="38" rx="10" ry="20" fill="#ffe066" transform="rotate(25 106 38)"/>
+      <!-- Body -->
+      <ellipse cx="80" cy="108" rx="42" ry="36" fill="#ffcce0"/>
+      <!-- Neck -->
+      <rect x="68" y="72" width="28" height="30" rx="14" fill="#ffd6e8"/>
+      <!-- Head -->
+      <ellipse cx="80" cy="60" rx="32" ry="28" fill="#ffd6e8"/>
+      <!-- Horn gold -->
+      <polygon points="80,10 73,46 87,46" fill="#f7b731"/>
+      <line x1="80" y1="10" x2="77" y2="46" stroke="#e0a028" stroke-width="1.5"/>
+      <!-- Eyes -->
+      <ellipse cx="68" cy="56" rx="8" ry="9" fill="white"/>
+      <ellipse cx="92" cy="56" rx="8" ry="9" fill="white"/>
+      <circle cx="70" cy="58" r="5" fill="#8b5cf6"/>
+      <circle cx="94" cy="58" r="5" fill="#8b5cf6"/>
+      <circle cx="69" cy="56" r="2" fill="white"/>
+      <circle cx="93" cy="56" r="2" fill="white"/>
+      <!-- Lashes -->
+      <path d="M62 49 Q64 44 68 48" stroke="#d946ef" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <path d="M86 49 Q89 44 92 48" stroke="#d946ef" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <!-- Nose -->
+      <circle cx="74" cy="68" r="3" fill="#ffb3d1"/>
+      <circle cx="86" cy="68" r="3" fill="#ffb3d1"/>
+      <!-- Smile -->
+      <path d="M69 73 Q80 82 91 73" stroke="#f472b6" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <!-- Cheeks -->
+      <circle cx="55" cy="65" r="8" fill="#ff6b9d" opacity=".35"/>
+      <circle cx="105" cy="65" r="8" fill="#ff6b9d" opacity=".35"/>
+      <!-- Legs -->
+      <rect x="60" y="135" width="12" height="22" rx="6" fill="#ffd6e8"/>
+      <rect x="88" y="135" width="12" height="22" rx="6" fill="#ffd6e8"/>
+      <!-- Tail fluffy -->
+      <path d="M38 100 Q15 118 22 140 Q35 130 40 115 Q20 128 28 148" stroke="#ff6b9d" stroke-width="8" fill="none" stroke-linecap="round"/>
+      <!-- Sparkles -->
+      <text x="118" y="90" font-size="16">⭐</text>
+      <text x="10" y="40" font-size="13">🌈</text>
+    </svg>`
+  },
+  {
+    name: "Capybara DJ",
+    desc: "Détendu. Totalement. Même en concert.",
+    fact: "🐾 Ami avec tous les animaux du monde",
+    color: "#78716c",
+    bg: "#fdf8f0",
+    border: "#d6c8b4",
+    tilt: "-1deg",
+    anim: "heartbeat",
+    svg: `<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+      <!-- Body round big -->
+      <ellipse cx="80" cy="105" rx="52" ry="42" fill="#d4b896"/>
+      <!-- Ears -->
+      <ellipse cx="45" cy="52" rx="12" ry="10" fill="#c4a882"/>
+      <ellipse cx="115" cy="52" rx="12" ry="10" fill="#c4a882"/>
+      <ellipse cx="45" cy="52" rx="7" ry="6" fill="#f4a0a0"/>
+      <ellipse cx="115" cy="52" rx="7" ry="6" fill="#f4a0a0"/>
+      <!-- Head -->
+      <rect x="44" y="50" width="72" height="58" rx="28" fill="#c4a882"/>
+      <!-- Snout -->
+      <ellipse cx="80" cy="95" rx="22" ry="14" fill="#b8956a"/>
+      <!-- Nostrils -->
+      <ellipse cx="73" cy="92" rx="4" ry="5" fill="#8b6343"/>
+      <ellipse cx="87" cy="92" rx="4" ry="5" fill="#8b6343"/>
+      <!-- Eyes sleepy half -->
+      <ellipse cx="64" cy="68" rx="10" ry="11" fill="white"/>
+      <ellipse cx="96" cy="68" rx="10" ry="11" fill="white"/>
+      <circle cx="64" cy="70" r="6" fill="#5c4033"/>
+      <circle cx="96" cy="70" r="6" fill="#5c4033"/>
+      <!-- Sleepy line -->
+      <path d="M54 65 Q64 60 74 65" stroke="#5c4033" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M86 65 Q96 60 106 65" stroke="#5c4033" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <!-- Gentle smile -->
+      <path d="M68 103 Q80 112 92 103" stroke="#8b6343" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <!-- Cheeks -->
+      <circle cx="50" cy="82" r="8" fill="#ff9f9f" opacity=".5"/>
+      <circle cx="110" cy="82" r="8" fill="#ff9f9f" opacity=".5"/>
+      <!-- Tiny headphones -->
+      <path d="M44 60 Q44 38 80 38 Q116 38 116 60" stroke="#3b82f6" stroke-width="6" fill="none" stroke-linecap="round"/>
+      <rect x="37" y="58" width="14" height="14" rx="7" fill="#3b82f6"/>
+      <rect x="109" y="58" width="14" height="14" rx="7" fill="#3b82f6"/>
+      <!-- Legs stub -->
+      <ellipse cx="55" cy="142" rx="16" ry="9" fill="#c4a882"/>
+      <ellipse cx="105" cy="142" rx="16" ry="9" fill="#c4a882"/>
+      <!-- Vibe -->
+      <text x="120" y="45" font-size="13">🎵</text>
+      <text x="8" y="100" font-size="13">😌</text>
+    </svg>`
+  },
+  {
+    name: "Pieuvre Kawaii",
+    desc: "Elle a 8 bras pour faire 8 câlins en même temps",
+    fact: "🐙 Chaque tentacule a son propre agenda",
+    color: "#8b5cf6",
+    bg: "#f8f0ff",
+    border: "#c4b5fd",
+    tilt: "3deg",
+    anim: "shake",
+    svg: `<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+      <!-- Tentacles -->
+      <path d="M42 118 Q20 130 18 155 Q30 148 36 135 Q28 150 32 160 Q42 150 44 135 Q38 148 46 155 Q52 140 50 122" fill="#c084fc" stroke="#a855f7" stroke-width="1"/>
+      <path d="M118 118 Q140 130 142 155 Q130 148 124 135 Q132 150 128 160 Q118 150 116 135 Q122 148 114 155 Q108 140 110 122" fill="#c084fc" stroke="#a855f7" stroke-width="1"/>
+      <path d="M65 128 Q58 148 60 162 Q68 152 70 138 Q66 152 72 158 Q78 144 76 128" fill="#c084fc" stroke="#a855f7" stroke-width="1"/>
+      <path d="M95 128 Q102 148 100 162 Q92 152 90 138 Q94 152 88 158 Q82 144 84 128" fill="#c084fc" stroke="#a855f7" stroke-width="1"/>
+      <!-- Body dome -->
+      <ellipse cx="80" cy="88" rx="52" ry="48" fill="#e879f9"/>
+      <!-- Top dome -->
+      <ellipse cx="80" cy="70" rx="44" ry="40" fill="#f0abfc"/>
+      <!-- Eyes big sparkly -->
+      <circle cx="64" cy="74" r="14" fill="white"/>
+      <circle cx="96" cy="74" r="14" fill="white"/>
+      <circle cx="67" cy="77" r="9" fill="#7c3aed"/>
+      <circle cx="99" cy="77" r="9" fill="#7c3aed"/>
+      <circle cx="64" cy="74" r="4" fill="#4c1d95"/>
+      <circle cx="96" cy="74" r="4" fill="#4c1d95"/>
+      <circle cx="68" cy="71" r="3" fill="white"/>
+      <circle cx="100" cy="71" r="3" fill="white"/>
+      <!-- Rosy cheeks -->
+      <circle cx="50" cy="88" r="9" fill="#f472b6" opacity=".5"/>
+      <circle cx="110" cy="88" r="9" fill="#f472b6" opacity=".5"/>
+      <!-- Happy mouth -->
+      <path d="M68 94 Q80 104 92 94" stroke="#c026d3" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <!-- Mini hearts -->
+      <text x="72" y="64" font-size="10">💜</text>
+      <text x="8" y="70" font-size="14">✨</text>
+      <text x="130" y="100" font-size="12">💜</text>
+    </svg>`
+  },
+  {
+    name: "Grenouille Bling",
+    desc: "Elle porte des lunettes de soleil même sous la pluie",
+    fact: "🐸 Croaaaak = son mot pour 'amazing'",
+    color: "#22c55e",
+    bg: "#f0fff4",
+    border: "#86efac",
+    tilt: "-2deg",
+    anim: "zoom",
+    svg: `<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+      <!-- Body -->
+      <ellipse cx="80" cy="108" rx="48" ry="40" fill="#4ade80"/>
+      <!-- Back legs -->
+      <ellipse cx="40" cy="130" rx="20" ry="10" fill="#86efac" transform="rotate(-30 40 130)"/>
+      <ellipse cx="120" cy="130" rx="20" ry="10" fill="#86efac" transform="rotate(30 120 130)"/>
+      <!-- Front arms -->
+      <ellipse cx="36" cy="105" rx="8" ry="18" fill="#4ade80" transform="rotate(-15 36 105)"/>
+      <ellipse cx="124" cy="105" rx="8" ry="18" fill="#4ade80" transform="rotate(15 124 105)"/>
+      <!-- Tummy -->
+      <ellipse cx="80" cy="115" rx="30" ry="24" fill="#bbf7d0"/>
+      <!-- Head -->
+      <ellipse cx="80" cy="72" rx="44" ry="36" fill="#4ade80"/>
+      <!-- Eye bumps big -->
+      <circle cx="55" cy="52" r="18" fill="#4ade80"/>
+      <circle cx="105" cy="52" r="18" fill="#4ade80"/>
+      <circle cx="55" cy="52" r="14" fill="white"/>
+      <circle cx="105" cy="52" r="14" fill="white"/>
+      <circle cx="55" cy="52" r="9" fill="#ca8a04"/>
+      <circle cx="105" cy="52" r="9" fill="#ca8a04"/>
+      <circle cx="55" cy="52" r="5" fill="#292524"/>
+      <circle cx="105" cy="52" r="5" fill="#292524"/>
+      <circle cx="52" cy="49" r="2.5" fill="white"/>
+      <circle cx="102" cy="49" r="2.5" fill="white"/>
+      <!-- Sunglasses -->
+      <rect x="40" y="56" width="28" height="16" rx="8" fill="#292524" opacity=".85"/>
+      <rect x="92" y="56" width="28" height="16" rx="8" fill="#292524" opacity=".85"/>
+      <line x1="68" y1="64" x2="92" y2="64" stroke="#292524" stroke-width="3"/>
+      <!-- Mouth wide smile -->
+      <path d="M52 84 Q80 102 108 84" stroke="#166534" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <!-- Cheeks -->
+      <circle cx="42" cy="80" r="8" fill="#f472b6" opacity=".4"/>
+      <circle cx="118" cy="80" r="8" fill="#f472b6" opacity=".4"/>
+      <!-- Bling -->
+      <text x="118" y="38" font-size="14">💎</text>
+      <text x="8" y="60" font-size="12">✨</text>
+    </svg>`
+  },
+  {
+    name: "Chaton Cosmique",
+    desc: "Vit sur 9 planètes en parallèle",
+    fact: "🐱 Dort 23h/24 mais rêve en HD",
+    color: "#ec4899",
+    bg: "#fff0f8",
+    border: "#fbcfe8",
+    tilt: "1deg",
+    anim: "heartbeat",
+    svg: `<svg viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+      <!-- Ears pointed -->
+      <polygon points="50,62 40,30 68,55" fill="#f9a8d4"/>
+      <polygon points="110,62 120,30 92,55" fill="#f9a8d4"/>
+      <polygon points="52,60 46,38 66,54" fill="#fda4af"/>
+      <polygon points="108,60 114,38 94,54" fill="#fda4af"/>
+      <!-- Body -->
+      <ellipse cx="80" cy="112" rx="44" ry="40" fill="#fce7f3"/>
+      <!-- Tummy -->
+      <ellipse cx="80" cy="118" rx="26" ry="28" fill="white"/>
+      <!-- Head -->
+      <circle cx="80" cy="72" r="42" fill="#fce7f3"/>
+      <!-- Eyes with stars inside -->
+      <circle cx="64" cy="68" r="13" fill="white"/>
+      <circle cx="96" cy="68" r="13" fill="white"/>
+      <circle cx="66" cy="70" r="9" fill="#db2777"/>
+      <circle cx="98" cy="70" r="9" fill="#db2777"/>
+      <circle cx="64" cy="68" r="4" fill="#831843"/>
+      <circle cx="96" cy="68" r="4" fill="#831843"/>
+      <circle cx="67" cy="65" r="3" fill="white"/>
+      <circle cx="99" cy="65" r="3" fill="white"/>
+      <!-- Tiny nose -->
+      <polygon points="80,80 77,84 83,84" fill="#f472b6"/>
+      <!-- Mouth with fangs cute -->
+      <path d="M73 86 Q76 90 80 87 Q84 90 87 86" stroke="#db2777" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <!-- Whiskers -->
+      <line x1="30" y1="80" x2="64" y2="84" stroke="#d946ef" stroke-width="1.5" stroke-linecap="round" opacity=".6"/>
+      <line x1="30" y1="86" x2="64" y2="86" stroke="#d946ef" stroke-width="1.5" stroke-linecap="round" opacity=".6"/>
+      <line x1="30" y1="92" x2="64" y2="88" stroke="#d946ef" stroke-width="1.5" stroke-linecap="round" opacity=".6"/>
+      <line x1="130" y1="80" x2="96" y2="84" stroke="#d946ef" stroke-width="1.5" stroke-linecap="round" opacity=".6"/>
+      <line x1="130" y1="86" x2="96" y2="86" stroke="#d946ef" stroke-width="1.5" stroke-linecap="round" opacity=".6"/>
+      <line x1="130" y1="92" x2="96" y2="88" stroke="#d946ef" stroke-width="1.5" stroke-linecap="round" opacity=".6"/>
+      <!-- Cheeks -->
+      <circle cx="50" cy="78" r="9" fill="#f9a8d4" opacity=".6"/>
+      <circle cx="110" cy="78" r="9" fill="#f9a8d4" opacity=".6"/>
+      <!-- Tail fluffy -->
+      <path d="M122 118 Q148 108 145 92 Q135 90 132 104 Q148 100 140 125" stroke="#f9a8d4" stroke-width="10" fill="none" stroke-linecap="round"/>
+      <!-- Tiny paws -->
+      <ellipse cx="54" cy="144" rx="14" ry="9" fill="#fce7f3"/>
+      <ellipse cx="106" cy="144" rx="14" ry="9" fill="#fce7f3"/>
+      <!-- Stars -->
+      <text x="10" y="38" font-size="13">🌟</text>
+      <text x="130" y="38" font-size="13">🪐</text>
+    </svg>`
+  }
+];
+
+// Color card backgrounds + borders
+const grid = document.getElementById('grid');
+
+animals.forEach((a, i) => {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.style.cssText = `background: ${a.bg}; border-color: ${a.border}; --tilt: ${a.tilt};`;
+  card.innerHTML = `
+    <div class="animal-wrap" style="background: ${a.border}; --anim: ${a.anim};">${a.svg}</div>
+    <div class="animal-name">${a.name}</div>
+    <div class="animal-desc">${a.desc}</div>
+    <div class="fun-fact" style="background:${a.border}; color:${a.color};">${a.fact}</div>
+  `;
+  // bounce on click
+  card.addEventListener('click', () => {
+    card.style.transform = `scale(1.12) rotate(${a.tilt})`;
+    setTimeout(() => card.style.transform = '', 300);
+    launchParty(card);
+  });
+  grid.appendChild(card);
+});
+
+// PARTY BURST
+function launchParty(card) {
+  const emojis = ['🌸','💖','⭐','✨','🎉','🦋','💜','🌈','🎊'];
+  const rect = card.getBoundingClientRect();
+  for (let i = 0; i < 12; i++) {
+    const el = document.createElement('div');
+    el.style.cssText = `position:fixed;font-size:${16+Math.random()*14}px;left:${rect.left+Math.random()*rect.width}px;top:${rect.top+Math.random()*rect.height}px;pointer-events:none;z-index:9999;transition:all .8s ease-out;`;
+    el.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+    document.body.appendChild(el);
+    requestAnimationFrame(() => {
+      el.style.transform = `translate(${(Math.random()-0.5)*200}px,${-100-Math.random()*200}px) rotate(${Math.random()*360}deg)`;
+      el.style.opacity = '0';
+    });
+    setTimeout(() => el.remove(), 900);
+  }
+}
+
+// FLOATING BACKGROUND EMOJIS
+const floatEmojis = ['🌸','💖','⭐','🦋','✨','🌺','💕','🎀','🌷','💗','🌟','🍭','🦩','🐙'];
+const container = document.getElementById('floaters');
+for (let i = 0; i < 22; i++) {
+  const el = document.createElement('div');
+  el.className = 'floater';
+  el.textContent = floatEmojis[Math.floor(Math.random()*floatEmojis.length)];
+  const dur = 8 + Math.random() * 12;
+  const delay = -Math.random() * dur;
+  el.style.cssText = `
+    left: ${Math.random()*100}%;
+    font-size: ${1.2 + Math.random()*1.4}rem;
+    animation-duration: ${dur}s;
+    animation-delay: ${delay}s;
+  `;
+  container.appendChild(el);
+}
+</script>
+</body>
+</html>
